@@ -1,0 +1,58 @@
+What blockchain helps solve:
+	- The double spending problem
+
+Tracking ownership in a ledger:
+	Ownership != Posession
+	Double spending problem:
+		Someone can potentially manipulate the ledger 
+
+	That introduces the problem - who keeps track of those records?
+		Can that person be trusted?
+		Who keeps track of the person who keeps the record
+		And so on 
+		Enter blockchain
+
+	Boiled down:
+		In the real world - big management structure problem. Lots of layers of auditing and bookeeping and tracking 
+
+		Blockchain provides a single solution to that problem.
+
+Blockchain allows secure transer of goods and services. Helps eliminate scams. 
+
+Smart contracts - when deployed on top of blockchain allows transactions. 
+
+Secured with cryptography
+
+Distinguishing features:
+
+Cuts out the middle man (lawyers, accountants, etc.)
+Peer to Peer system secured through cryptography 
+Allows deals and transactions to be completed faster
+Increased Capacity:
+	- due to peer to peer can increase capacity
+	- thousands of computers (nodes) working together in same network
+
+Using bitcoin to explain blockchain:
+	Blockchain is the publick ledger of all bitcoin transactions that have ever taken place.
+	So blockchain is constantly evolving
+	The transactions that are added to the chain are being processed by computers (nodes) connected to the network
+	Nodes are located around the globe making it a decentralized technology.
+	Blocks are added in chronological order
+
+Blockchain is considered part of the web 3.0 meaning:
+	- Connective intelligence
+	- Connecting data
+	- Concepts Applications
+	- Ultimately people
+
+Blockchain helps acheive all that 
+
+Blockchain is designed for longevity and durability
+It's not owned by any single entity
+One node can't control the rest
+
+Blockchain solves the problem of manipulation
+
+
+
+

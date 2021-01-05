@@ -1,0 +1,17 @@
+Blockchain tools:
+	- metamask.io
+		- metamask backup phrase 
+			oyster fatal arrange solve mystery garlic side blood auto sock where coast
+
+	- Solidity for programming smart contracts.
+		- remix ethereum ide
+			- deploy and run transactions plugin
+			- solidity compiler plugin
+			- solidity files are plain text files
+
+	- Other programming languages for smart contracts include:
+		- vyper (2nd most popular - research oriented, derived from python) 
+		- LLL
+		- they all get compiled (meaning it gets sent to the blockchain as bytecode)
+
+	- Ganache from trufflesuite.com for development

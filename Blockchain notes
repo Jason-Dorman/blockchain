@@ -1,0 +1,119 @@
+Blockchain notes:
+
+- You need a blockchain node to interact with the Blockchain
+- The blockchain is the single source of truth in the whole system
+	- a shared legder for all participants which can get access to the same data
+- There are infrastructure providers to abstract running blockchains away from developers and users that make onboarding easy 
+
+Etherium transactions:
+	How transactions are handled in any library than can do transactions:
+
+		sendTransaction: obj
+
+			Parameters:
+
+			object: The transaction object to send
+				from: str|int # The address for the sending account.
+				to: str # The destination address of the message, left undefined for a contract-creation transaction.
+				value: int|str|BigNumber # (optional) The value transferred for the transaction in wei, also the endowment if it's a contract-creation transaction
+				gas: int # (optional), default: TBD) the amount of gas to use for the transaction (unused gas is refunded)
+				gasPrice: int|str|BigNumber # (optional) The price of gas for this transaction in wei
+				data: str # (optional) Either a ABI byte string containing the data of the function call on a contract, or in the case of a contract-creation transaction the initiallisation code.
+				nonce: int # (optional) int of a nonce. This allows to overwite your own pending transactions that use the same nonce incremented to avoid replay attacks
+				callback: Function # (optional) Optional callback, returns an error object as first parameter and the result as second
+
+Blockchain knows the transaction isn't malicious becuase it uses signatures
+	
+	signTransaction function signs a transaction.
+	The account needs to be unlocked with a private key.
+
+	When the transaction is signed you get reurn values including, 
+		v
+		r
+		s
+		hash
+
+	These allow you to verify it is NOT a malicious transaction.
+
+	private keys are a randomized string of 32 bytes(characters) long of 64 hex characters
+	0x121212121212121212121212121212
+
+	Private keys are sent through an Elliptic Curve Digital Signature Algorithm to a public key (64 bytes)
+
+	Signatures are generated from private keys
+	Public keys and addresses are generated from private keys
+
+Cryptograghic hashing:
+	cryptographic hash functions take an input and create a "digest" - essentially a coded message
+
+	The ideal cryptographic hash function has five main properties
+		- It is deterministic so the same message always results in the same hash
+			- basically the output of the hash is always the same
+		- It's quick to compute the hash value for any given message
+		- Not possible to guess what the message is from the hash value
+		- A small change to the message should change the hash value so drastically that the new hash value appears uncorrelated to the old hash value
+		- It's not possible to find two different messages with the same hash value
+
+		- In blockchain hashing: The hash value of a transaction is recorded on every node on the network. Every new transaction creates a new hash value even if it incorporates an older hash value. So if you were trying to change a hash you would need to change it on every node - which is why it's so secure. You couldn't just break into one system, you'd need to break into all of the systems and access all of the hashes and all of the couples of the hashes for what you were trying to target. 
+
+		- Hashing is the mathenatical foundation of blockchains. Without hashing there is no blockchian. 
+		- Blocks contain all hashes of previous blocks
+			- that's how they're all chained togeher 
+		- If you change information in one of the previous blocks it changes all of the blocks after that.
+
+Smart contracts:
+	- a piece of code runnimg on the blockchain
+		- it's a state machine
+		- needs transactions to change state
+		- can do logic operations
+
+	- Statechange happens thought mining and transactions
+
+	- Solidity is turing complete 
+		- meaning in theory it can solve any computation problem
+
+	- every ehtereum node in the network executes the same code because every node has a copy of the chain
+
+Understanding blockchain nodes: 
+	- Can have a main network and a private network. Data will be different on both networks. If you start a chain on a private network you can keep that data from being passed to the main network. This is useful for banks or governments where data privacy is not only needed but a requirement.
+	- You can start blocks on the main network and then fork it to the private network which gives you the blocks from the main network before the fork and then data on private network after the fork will be different. 
+	- If you start a private network you start with a genesis block which has to be configured. 
+
+	- Main networks are persistent meaning they cost money and are immutable, can't take them back. Real blockchain and costs money.
+		- Then there are test networks: which are persistent but can be deleted. Also real blockchain and a copy of the main network. Where you can test smart contracts, see if you can onboard beta users, etc. Used for beta releases.
+			- There is also developer networks like Ganache used for unit testing.. fast but not persistent. Perfect for testing. 
+
+	- All nodes use ethereum protocol - same way of storing and accessing data.
+
+Understanding Accounts:
+	- Two different kinds of accounts:
+		- contract accounts
+			- inside blockchain
+			- managed by code rather than private keys
+		- externally owned accounts
+			- uses private keys 
+			- used to send funds and initiate transactions
+
+	- Transactions with smart contract accounts must to be triggered by externally owned accounts
+			- live outside of blockchain but can access blockcahin
+
+Understanding addresses:
+	- All information is public
+		- ledger is shared by all participants
+		- how much money is stored on each address is stored on the ledger (it's not stored on your address or account or wallet)
+		- your wallet/account stores a private key which generates a public key which generates an address
+		- The blockchain is the database that stores how much is owned by which address
+	- In solidity addresses have two important members:
+	 - .balance # which stores the amount in wei
+	 - .transfer # you can transfer any amount from your smart contract to an address
+
+	 	address myAddress = "0xabc123"
+	 		myAddress.balance
+	 		myAddress.transfer(amountInWei)
+
+	- Global object "message":
+		- msg.sender - address of the account that initialized the transaction
+		- msg.value - how much ether was sent
+		- now - current timestamp
+
+	- "payable" must be used in function in order to recieve ether
