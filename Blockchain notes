@@ -117,3 +117,54 @@ Understanding addresses:
 		- now - current timestamp
 
 	- "payable" must be used in function in order to recieve ether
+
+VARIABLE TYPES
+*** need a better understanding of mapping***
+*** mappings and structs are a powerful combination***
+Mapping:
+	- similar to hash maps
+	- mapping(_keyType => _valueType) name;
+	- the key type can be any elementary type. Meaning it can be any of the built in value types plus bytes and strings
+	- value types can be any type including mappings
+	- Example: A classic yes/no flag basically to indicate if an address can interact with the contract (or not)
+	  	mapping (address => bool) addressAllowed;
+	  	addressAllowed[someAddress] = true;
+	- benefit is the values don't have to be initialized because they're initialized by default
+	- mqppings also don't have a length (like an array does)
+	- if you make a mapping public it automatically becomes a getter function that can be acccessed
+	- mappings can be iterable by using a library (see solidity documentation)
+
+
+Structs:
+	- structs allow you to create your own data structures or types
+	- you can call variables defined in the struct like you would call a variable in a class except you don't need the "class"/ struct name first
+	- Example:
+		contract MappingStructExample {
+    
+		    struct Payment {
+		        uint amount;
+		        uint timestamps;
+		    }
+		    
+		    struct Balance {
+		        uint totalBalance;
+		        uint numPayments; // provides an output like a print that tells you the number of payments received by the contract
+		        mapping(uint => Payment) payments;
+		    }
+	- structs are similar to using a class to define variables that can be accessed but in solidity it's more effecient (meaning you use less gas) to set up structs rather than something similar to a class (in solidity it would be another contract)
+
+Arrays:
+	- Arrays can be fixed or dynamic in length
+	- fixed array:
+		T[a,b,c] // fixed array with length a,b,c
+		T[] // dynamic array - basically an empty list
+		T[][5] // gives you 5 dynamic arrays
+	- Arrays cause problems on blockchains because iterating over them increases gas costs. For that reason it's almost always better to use mappings
+
+Enums:
+	- enums are one way to create a user defined type in solidity
+	- will be integers internally so the following directions are stored as integers:
+		enum actionChoices {goLeft, goRight, goStraight, sitStill}
+		actionChoices choice;
+		actionChoices constant defaultChoice = actionChoices.goStraight
+
