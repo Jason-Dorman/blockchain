@@ -168,3 +168,178 @@ Enums:
 		actionChoices choice;
 		actionChoices constant defaultChoice = actionChoices.goStraight
 
+uint256:
+	- this is a data structure that needs to assigned to the amount of the transaction
+		contract exceptionExample {
+    
+	    mapping(address => uint) public balanceRecieved;
+	    
+	    function recieveMoney() public payable {
+	        balanceRecieved[msg.sender] += msg.value;
+	    }
+	    
+	    function withdrawMoney(address payable _to, uint _amount) public {
+	        if(_amount <= balanceRecieved[msg.sender]) {
+	            balanceRecieved[msg.sender] -= _amount;
+	            _to.transfer(_amount);
+	        }
+	    }
+	}
+
+Exception handling:
+	
+	Transactions & Errors:
+		- Transactions are atomic meaning errors are "state reverting"
+			- this means if an assert, require, or revert throws an error everything that happened in previous functions will have their state reverted to the previous state before the function was executed
+		- require, assert, revert
+			- essentially "throw"
+		- They cascade - meaning if an exception is thrown in a seperate contract it will revert high level funtions in another contract that is interacting with the contract that threw the exception - low level functions will not cascade to include:
+			- address.send, address.call, address.delegatecall, address.staticcall
+		- Catching is not possible in solidity - instead the transaction is simply terminated
+			- catching can however happen outside of solidity
+		- revert and require can return an error string
+
+	Assert vs. Require
+		- Require reverts
+			- returns remaining gas when require terminates the transaction
+		- Assert creates an invalid operation
+			- consumes all gas
+		- Assert is used to validate invariants (internal variables)
+		- require is used to validate user input
+		- Assert is also triggered if you code something wrong
+			- reach an array out of bounds or an index error
+			- division by zero
+			- byteshifting by a negative amount
+			- convert a value too big or a negative to enum
+			- zero-initialized variable of internal function type
+			- or assert(x) where x evaluates to false
+		- requires can also be triggered:
+			- require(x) where x evaluates to false
+			- function call via message call but it doesn't finish properly
+				- except low level function calls
+			- external function call to a contract not containing any code
+			- your contract recieves ether at a getter function
+			- address.transfer() fails
+	Revert statements:
+		- Pretty much does the same thing as require
+		- reverts the transaction
+		- really comes down to a preference between revert and require
+
+	Key takeaways:
+		- USE REQUIRE FOR INPUT VALIDATION
+		- USE ASSERT FOR CHECKING INTERNAL STATES
+
+Functions:
+	Setter and getter functions:
+		- getter functions are usually view functions
+		- writing transactions: transactions (need to be mined)
+		- Reading transactions are called a call
+			- calls are executed against local blockchain node
+			- calls don't need to be mined
+			- basically if you don't need to change anything, you don't need to inform other participants on the blockchain
+			- Reading is free (no gas cost)
+		- There are two different kinds of functions for reading values from a smart contract.
+			- View functions: Reading from the state and from other view functions
+			- Pure functions: Not reading or modifying the state but they can interact with other pure functions
+				- View and pure functions are only against your local blockchain node
+					- they don't need mining.
+	Function Visibility:
+		- Public 
+			- can be caled internally and externally
+			- Can also be inherited in another smart contract
+		- Private
+			- Only for the contract, not externally reachable and not via derived contracts
+		- External
+			- Can be called from other contracts
+			- Can be called externally
+		- Internal
+		- Only from the contract itself or from derived contracts. Can't be invoked by a transaction
+	Constructors:
+		- use keyword "constructor" rather than function
+		- Only called once during deployment
+		- Can't be called afterwards
+		- Is either public or internal
+	Fallback functions:
+		- Mostly used to receive ether as a simple transaction but beware of the gas limit
+		- A function without a name: "function()"
+		- Called when a transaction without a function-call is sent to the smart contract
+			- called when you send ether to a smart contract without interacting with any functions
+		- Called when the function-call in the transaction isn't found
+			- like if you misspell the function name. So evm can't find function name and defaults to the fallback function
+		- Can only be external
+		- Contracts receiving ether without a fallback function and without a function call with throw an exception
+		- You cannot completely avoid receiving ether
+			- Miner reward or selfdestruct(address) will forcefully credit ether
+		- Worst case: You can only rely on 2300 gas
+			- _contractAddress.transfer(1 ether); send only 2300 gas along
+		- Forcefully prevent contract execution if called with contract data
+			- require(msg.data.length==0)
+
+Inheritance:
+	- a contract can inherit multiple contracts
+
+Modifiers:
+	- change behavior of functions
+	- automatically check a pre-condition
+
+Events and return values:
+	- EVM provides a logging functionality
+		- event MyEvent(uint _arg1, address indexed _arg2)
+			- Up to 3 parameters in an event can be indexed.
+			- That means they are hashed and can be searched for later on in the site chain. So if you want to be able to go back in histoy and search for something you can
+	- Used for return values from transactions
+	- Used externally to trigger functionality (like a third party approval of a transaction)
+	- Used as a cheap data storage
+	You should use events as return values for the reasons below: Events are a good way to give you an idea about what's happening in a smart contract
+	- Writing transactions cannot return values or data externally
+		- They return a transaction hash
+		- That creates a problem because the hash can be in a few differnt states before it's actually mined. Transactions can take a long time to complete or may fail.
+		- So events are used to inform external users something happened on the blockchain
+	- Events as data storage:
+		- Problem: Storing Data is EXTREMELY expensive on Ethereum Blockchain
+		- Solution:
+			- Store data off-chain and store only a proof(hash) as Notary
+			- Store data in another blockchain such as IPFS
+			- Store data in event logs if not necessary
+				- if data is not needed directly by the smart contract put it in a log
+		- Events in dApps
+			- Applications can subscribe and listen to these events through the RPC interface of an etherreum client.
+			- Events are inheritable members of contracts
+			- The log and its event data is not accessible from within contracts
+			- indexed event parameters can be searched for later.
+
+Smart Contract Deployment lifecycle:
+	- Create the smart contract by writing it in solidity.
+	- That gets comiled in bytecode and runs on the EVM. In the bycode is the function signatures which get compared to the data field of the transaction.
+	- Then you send the transaction to the network without the reciever (or data). Then later you send the transactions on the smart contract on a specific address.
+
+	- Interaction:
+		- In remix when you deploy the smart contract the Web3 library does the calculations to create the right hash
+		- That uses an ABI (application binary interface) array to interact with the smart contract. The ABI array contains all the functions/parameters/return values of the contract in essentially a json format.
+		- The reason for the ABI array is that smart contracts on the blockchain are just binary. 
+			- Client software doesn't know the interfaces so it needs to be told via an external configuration which is the ABI.
+		- A function signature is created in a hash encoded in the first 4 bytes of the keccak256 hash.
+			- web3.js or eth.js basically takes care of encoding.
+
+	- Debugging:
+		- Activated in a plugin.
+		- Debug step by step - no breakpoints
+		- Transaction based - you step into after it happens not while it happens.
+		- Shows gas costs for Opcodes, stack, and memory
+			- decent amount of details
+		- Relatively good for prototyping.
+
+	- Gas prices
+		- Prices vary based on demand but consumption is constant
+		- When developing on mainnet you can set your own gas price. The higher the gas cost the faster the transaction is verified by encentivizing miners.
+		- avoid loops - they get pricey 
+
+-Using Libraries:
+	- Cannot recieve ether to a library
+	- Cannot be inherited or inherit
+	- Used to extend functionality and potentially make your smart contracts safer
+	- Not used to upgrade smart contracts you need a different structure for that. 
+		- https://vomtom.at/upgrade-smart-contracts-on-chain/
+
+
+

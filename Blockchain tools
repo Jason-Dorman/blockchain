@@ -15,3 +15,4 @@ Blockchain tools:
 		- they all get compiled (meaning it gets sent to the blockchain as bytecode)
 
 	- Ganache from trufflesuite.com for development
+	- node.js for development
