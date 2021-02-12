@@ -16,3 +16,17 @@ Blockchain tools:
 
 	- Ganache from trufflesuite.com for development
 	- node.js for development
+		- to initialize a directory as node js directory use "npm init -y"
+		- to add web3 as a dependency to the node package use "npm install --save web3"
+		- to activate use "node"
+		- then use "let web3 = require("web3");" to import web3
+		- then you need to instantiate web3 to connect to ganache server
+			- use "let Web3 = new web3(new web3.providers." to check out providers
+		- since ganache is running locally we can use "let Web3 = new web3(new web3.providers.HttpProvider("http://localhost:7545"));" to connect to the ganache server
+		- web3. then tab shows the available endpoints to interact with.
+		- to check the balance of an account use 
+			- web3.eth.getBalance("account_number").then(console.log);
+			- that gives the output in wei so in order to check ether use:
+			- web3.eth.getBalance("account_number").then(function(result) {console.log(web3.utils.fromWei(result, "ether"));});
+		- to send ether:
+			- web_three.eth.sendTransaction({from: "0xfb7Fb4293716B222668279294cbd9388F66a9e53", to:"0xdCbbF0965071611066ACeA0f799ef423A858DbE3", value: web_three.utils.toWei("1", "ether")});
