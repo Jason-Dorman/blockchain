@@ -30,3 +30,25 @@ Blockchain tools:
 			- web3.eth.getBalance("account_number").then(function(result) {console.log(web3.utils.fromWei(result, "ether"));});
 		- to send ether:
 			- web_three.eth.sendTransaction({from: "0xfb7Fb4293716B222668279294cbd9388F66a9e53", to:"0xdCbbF0965071611066ACeA0f799ef423A858DbE3", value: web_three.utils.toWei("1", "ether")});
+
+- To interact with web3 from the browser
+	- in node module directory:
+		- npm install web3.js-browser (a wrapper to use in html file)
+			- to import in html file:
+				- <script src="node_modules/web3.js-browser/build/web3.js"></script>
+
+- Truffle - a node pkg
+	- in a terminal:
+		- npm install -g truffle
+
+	- Truffle has no front end - it's made for managing smart contracts and connectivity to a blockchain
+
+	- Initialize an empty directory with truffle (to give you a starter template) from terminal with:
+		- truffle unbox react
+
+	- MAKE SURE TO CHECK OUT TRUFFLE'S BOXES ON THEIR SITE - REACT IS JUST ONE
+
+	* note: you can open vs code for the directory you're in by typing code . in the terminal
+		extensions in vs code:
+			- solidity (Juan Blanco)
+			- Solidity Visual Developer (tintinweb)
